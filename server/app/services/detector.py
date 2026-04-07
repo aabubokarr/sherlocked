@@ -9,24 +9,6 @@ import cv2
 import numpy as np
 from ultralytics import YOLO
 
-try:  # Torch 2.6+ safe loading support
-    from torch.serialization import add_safe_globals
-except ImportError:  # pragma: no cover - older torch versions
-    add_safe_globals = None  # type: ignore[assignment]
-
-try:
-    from ultralytics.nn.tasks import DetectionModel
-except ImportError:  # pragma: no cover - defensive
-    DetectionModel = None  # type: ignore[assignment]
-
-if add_safe_globals and DetectionModel:
-    try:
-        add_safe_globals([DetectionModel])
-    except Exception:  # pragma: no cover - guard against API differences
-        logging.getLogger(__name__).warning(
-            "Failed to register DetectionModel with torch.safe_globals"
-        )
-
 from ..config import settings
 from .color_extractor import extract_dominant_color
 
@@ -89,7 +71,22 @@ class DetectionService:
             )
 
         logger.info("Loading YOLO model from %s", model_path)
-        self.model = YOLO(str(model_path))
+        
+        # Monkeypatch torch.load to handle PyTorch 2.6+ weights_only=True default
+        # which breaks YOLO model loading from various versions.
+        import torch
+        original_load = torch.load
+        
+        def patched_load(*args, **kwargs):
+            kwargs["weights_only"] = False
+            return original_load(*args, **kwargs)
+            
+        torch.load = patched_load
+        try:
+            self.model = YOLO(str(model_path))
+        finally:
+            torch.load = original_load
+            
         self.default_min_conf = default_min_conf
 
     def process_video(

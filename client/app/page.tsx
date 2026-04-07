@@ -10,7 +10,6 @@ import {
 import { Header } from "@/components/layout/header";
 import { ChatMessage } from "@/components/chat/chat-message";
 import { ChatInput } from "@/components/chat/chat-input";
-import { Lightbox } from "@/components/media/lightbox";
 
 const MIN_CONFIDENCE = 0.6;
 const BACKEND_URL =
@@ -83,7 +82,7 @@ export default function Home() {
     },
   ]);
   const [input, setInput] = useState("");
-  const [lightboxFrame, setLightboxFrame] = useState<FrameMatch | null>(null);
+  const [selectedFrame, setSelectedFrame] = useState<FrameMatch | null>(null);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -523,7 +522,7 @@ export default function Home() {
                   content={msg.content}
                   frames={msg.frames}
                   timestamp={msg.timestamp}
-                  onFrameClick={(frame) => setLightboxFrame(frame)}
+                  onFrameClick={setSelectedFrame}
                 />
               ))}
 
@@ -563,12 +562,64 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Lightbox */}
-      {lightboxFrame && (
-        <Lightbox 
-          frame={lightboxFrame} 
-          onClose={() => setLightboxFrame(null)} 
-        />
+      {/* Frame Preview Modal */}
+      {selectedFrame && (
+        <div 
+          className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-sm px-4 animate-fade-in"
+          onClick={() => setSelectedFrame(null)}
+        >
+          <div 
+            className="relative max-w-6xl w-full max-h-[90vh] bg-slate-900 rounded-xl overflow-hidden border border-white/10 shadow-2xl flex flex-col"
+            onClick={e => e.stopPropagation()}
+          >
+            <div className="absolute top-4 right-4 z-10">
+              <button 
+                onClick={() => setSelectedFrame(null)}
+                className="bg-black/50 hover:bg-black/80 text-white rounded-full p-2 backdrop-blur-md transition-all"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                  className="h-6 w-6"
+                >
+                  <line x1="18" y1="6" x2="6" y2="18" />
+                  <line x1="6" y1="6" x2="18" y2="18" />
+                </svg>
+              </button>
+            </div>
+            
+            {selectedFrame.image ? (
+              <div className="overflow-auto flex-1 flex items-center justify-center bg-slate-950 min-h-[50vh]">
+                <img
+                  src={`data:image/jpeg;base64,${selectedFrame.image}`}
+                  alt={`Frame ${selectedFrame.frameIndex}`}
+                  className="w-auto h-auto max-w-full max-h-[75vh] object-contain"
+                />
+              </div>
+            ) : (
+              <div className="flex h-64 w-full items-center justify-center text-slate-500 bg-slate-950 min-h-[50vh]">
+                No preview available
+              </div>
+            )}
+            
+            <div className="bg-slate-900 p-5 border-t border-white/10 flex flex-wrap justify-between items-center gap-4">
+              <div>
+                <span className="text-lg text-slate-200 font-medium">Timestamp: {selectedFrame.timestampFormatted}</span>
+              </div>
+              
+              <div className="flex flex-wrap gap-2">
+                {Array.from(new Set(selectedFrame.objects.map(o => o.class))).map(cls => (
+                  <span key={cls} className="px-3 py-1 text-xs font-semibold uppercase tracking-wider rounded-md bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">
+                    {cls}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
       )}
     </main>
   );

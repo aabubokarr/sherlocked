@@ -15,7 +15,7 @@ interface ChatMessageProps {
   content?: string;
   frames?: FrameMatch[];
   timestamp: Date;
-  onFrameClick: (frame: FrameMatch) => void;
+  onFrameClick?: (frame: FrameMatch) => void;
 }
 
 // Helper functions for color badge styling
@@ -158,11 +158,10 @@ export function ChatMessage({
           {frames && frames.length > 0 && (
             <div className="mt-4 grid grid-cols-2 sm:grid-cols-3 gap-2">
               {frames.map((frame) => (
-                <button
+                <div
                   key={`${frame.frameIndex}-${frame.timestamp}`}
-                  type="button"
-                  onClick={() => onFrameClick(frame)}
-                  className="group relative overflow-hidden rounded-lg border border-white/10 bg-black/40 transition-all hover:scale-105 hover:border-indigo-500/50 hover:shadow-lg hover:shadow-indigo-500/20"
+                  className="group relative overflow-hidden rounded-lg border border-white/10 bg-black/40 cursor-pointer"
+                  onClick={() => onFrameClick?.(frame)}
                 >
                   {frame.image ? (
                     <img
@@ -200,7 +199,7 @@ export function ChatMessage({
                       ))}
                     </div>
                   )}
-                </button>
+                </div>
               ))}
             </div>
           )}

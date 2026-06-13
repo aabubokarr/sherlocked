@@ -15,7 +15,7 @@ Welcome to the **Sherlocked** project! This README provides an overview of the p
 
 ## Visit
 
-- [Vercel](https://sherlocked0.vercel.app)
+- [Repository](https://github.com/aabubokarr/sherlocked)
 
 ## About
 
@@ -35,42 +35,32 @@ Welcome to the **Sherlocked** project! This README provides an overview of the p
 ## Installation
 
 1. Clone the repository:
-
    ```bash
-   git clone https://github.com/woabu0/sherlocked.git
+   git clone https://github.com/aabubokarr/sherlocked.git
    ```
-
 2. Navigate to the project directory:
-
    ```bash
    cd sherlocked
    ```
-
-3. Set up the Backend (Python):
-
+3. Set up the Frontend:
+   ```bash
+   cd client
+   npm install
+   ```
+4. Set up the Backend (Python):
    ```bash
    python -m venv .venv
    source .venv/bin/activate
    pip install -r server/requirements.txt
    ```
-
-4. Set up the Frontend (Node.js):
-
+5. Run the frontend:
    ```bash
-   cd client
-   npm install
+   npm run dev
    ```
-
-5. Run the Application:
-
-   - Backend:
-     ```bash
-     python -m uvicorn server.app.main:app --reload --host 0.0.0.0 --port 8000
-     ```
-   - Frontend:
-     ```bash
-     npm run dev
-     ```
+6. Run the backend:
+   ```bash
+   python -m uvicorn server.app.main:app --reload --host 0.0.0.0 --port 8000
+   ```
 
 ## Structure
 
@@ -107,8 +97,8 @@ sherlocked/
 ## Contributors
 
 <p align="center">
-  <a href="https://github.com/woabu0/sherlocked/graphs/contributors">
-    <img src="https://contrib.rocks/image?repo=woabu0/sherlocked" alt="Contributors" />
+  <a href="https://github.com/aabubokarr/sherlocked/graphs/contributors">
+    <img src="https://contrib.rocks/image?repo=aabubokarr/sherlocked" alt="Contributors" />
   </a>
 </p>
 
@@ -118,23 +108,17 @@ Contributions are welcome! Please follow these steps:
 
 1. Fork the repository.
 2. Create a new branch:
-
    ```bash
    git checkout -b feature-name
    ```
-
 3. Commit your changes:
-
    ```bash
    git commit -m "Add feature-name"
    ```
-
 4. Push to the branch:
-
    ```bash
    git push origin feature-name
    ```
-
 5. Open a pull request.
 
 ## License

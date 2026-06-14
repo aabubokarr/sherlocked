@@ -1,33 +1,20 @@
 "use client";
 
 import Link from "next/link";
+import { useSectionScroll } from "@/hooks/use-section-scroll";
+import { SherlockedLogo } from "@/components/ui/sherlocked-logo";
 
-interface FooterProps {
-  onScrollToSection: (id: string) => void;
-}
-
-export function Footer({ onScrollToSection }: FooterProps) {
+export function Footer() {
+  const scrollToSection = useSectionScroll();
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="w-full border-t border-white/5 bg-slate-950/60 mt-20 pt-16 pb-12 z-10 relative">
-      <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-8">
+    <footer className="w-full border-t border-white/5 bg-slate-950/60 mt-10 sm:mt-14 pt-8 sm:pt-10 pb-4 sm:pb-5 z-10 relative">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
         {/* Logo & Description Column */}
         <div className="md:col-span-2 space-y-4">
           <div className="flex items-center gap-3">
-            <div className="h-7 w-7 rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-md shadow-indigo-500/20">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth={2}
-                className="h-4.5 w-4.5 text-white"
-              >
-                <circle cx="11" cy="11" r="8" />
-                <path d="m21 21-4.3-4.3" />
-              </svg>
-            </div>
+            <SherlockedLogo size={28} className="shrink-0" />
             <span className="text-lg font-bold text-slate-100">
               Sherlocked
             </span>
@@ -42,16 +29,19 @@ export function Footer({ onScrollToSection }: FooterProps) {
           <h4 className="text-xs font-bold text-slate-300 uppercase tracking-widest mb-4">Navigations</h4>
           <ul className="space-y-2 text-xs text-slate-400 font-medium">
             <li>
-              <button onClick={() => onScrollToSection("about")} className="hover:text-white transition-colors cursor-pointer text-left">About Project</button>
+              <button onClick={() => scrollToSection("about")} className="hover:text-white transition-colors cursor-pointer text-left">About Project</button>
             </li>
             <li>
-              <button onClick={() => onScrollToSection("features")} className="hover:text-white transition-colors cursor-pointer text-left">Features</button>
+              <button onClick={() => scrollToSection("features")} className="hover:text-white transition-colors cursor-pointer text-left">Features</button>
             </li>
             <li>
-              <button onClick={() => onScrollToSection("demo")} className="hover:text-white transition-colors cursor-pointer text-left">Intent Parser</button>
+              <button onClick={() => scrollToSection("demo")} className="hover:text-white transition-colors cursor-pointer text-left">Intent Parser</button>
             </li>
             <li>
-              <button onClick={() => onScrollToSection("research")} className="hover:text-white transition-colors cursor-pointer text-left">Research Metrics</button>
+              <button onClick={() => scrollToSection("research")} className="hover:text-white transition-colors cursor-pointer text-left">Research Metrics</button>
+            </li>
+            <li>
+              <button onClick={() => scrollToSection("contact")} className="hover:text-white transition-colors cursor-pointer text-left">Contact</button>
             </li>
             <li>
               <Link href="/detective" className="text-indigo-400 hover:text-indigo-300 transition-colors flex items-center gap-1">
@@ -85,11 +75,11 @@ export function Footer({ onScrollToSection }: FooterProps) {
       </div>
 
       {/* Bottom Credits */}
-      <div className="max-w-7xl mx-auto px-6 border-t border-white/5 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-slate-500 font-medium">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 border-t border-white/5 mt-6 sm:mt-8 pt-4 sm:pt-5 flex flex-col md:flex-row justify-between items-center gap-2 sm:gap-3 text-[10px] sm:text-xs text-slate-500 font-medium text-center md:text-left">
         <div>
-          &copy; Copyright {currentYear} Sherlocked. All rights reserved.
+          Copyright &copy; {currentYear} Sherlocked. All rights reserved.
         </div>
-        <div>
+        <div className="max-w-md md:max-w-none">
           Footage Analysis with Natural Language Queries Using LLM based Object-Attribute Binding
         </div>
       </div>

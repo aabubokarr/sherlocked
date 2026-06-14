@@ -1,52 +1,13 @@
 "use client";
 
 import { useState } from "react";
-
-const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL ?? "http://localhost:8000";
-
-interface QueryItem {
-  text: string;
-  pairs: Array<{ object: string; color: string }>;
-  targets: string[];
-  colors: string[];
-  pipeline: string;
-}
-
-const SAMPLE_QUERIES: QueryItem[] = [
-  {
-    text: "find a person wearing a blue kameez and black hijab",
-    pairs: [
-      { object: "kameez", color: "blue" },
-      { object: "hijab", color: "black" }
-    ],
-    targets: ["kameez", "hijab"],
-    colors: ["blue", "black"],
-    pipeline: "gemini-2.5-flash-lite Intent Parser"
-  },
-  {
-    text: "look for a red panjabi",
-    pairs: [
-      { object: "panjabi", color: "red" }
-    ],
-    targets: ["panjabi"],
-    colors: ["red"],
-    pipeline: "Fast Pattern Extractor"
-  },
-  {
-    text: "spot a saree",
-    pairs: [],
-    targets: ["saree"],
-    colors: [],
-    pipeline: "Keyword Fallback Engine"
-  }
-];
-
-const GARMENT_CLASSES = [
-  "Belt", "Blazer", "Blouse", "Burqo", "Cap", "Cardigan", "Dhoti", "Gown", "Hijab", 
-  "Fatua", "Footwear", "Frock", "Gawn", "Hoodie", "Jacket", "Jeans pant", "Kameez", 
-  "Koti", "Lehenga", "Lungi", "Panjabi", "Pagri", "Pajama", "Pant", "Plazo", "Polo shirt", 
-  "Sando genji", "Saree", "Sherwani", "Shirt", "Shorts", "T-shirt", "Tie", "Top", "Watch"
-];
+import {
+  BACKEND_URL,
+  COLOR_KEYWORDS,
+  GARMENT_CLASSES,
+  SAMPLE_QUERIES,
+} from "./constants";
+import type { QueryItem } from "./types";
 
 export function QuerySimulator() {
   const [customQuery, setCustomQuery] = useState("");
@@ -84,22 +45,16 @@ export function QuerySimulator() {
       } else {
         throw new Error("API failed");
       }
-    } catch (err) {
-      // Client-side regex pattern matching fallback using 11 HSV colors & 39 clothing classes
+    } catch {
+      // Offline fallback: tokenize color + garment pairs when the intent API is unavailable.
       const queryLower = customQuery.toLowerCase();
-      const colorKeywords = [
-        "red", "blue", "green", "yellow", "orange", "purple", "pink",
-        "black", "white", "gray", "grey", "cyan"
-      ];
-      
       const foundColors: string[] = [];
       const foundTargets: string[] = [];
       const foundPairs: Array<{ object: string; color: string }> = [];
 
-      // Tokenize
       const words = queryLower.split(/\s+/);
       for (let i = 0; i < words.length - 1; i++) {
-        if (colorKeywords.includes(words[i]) && words[i+1].length > 2) {
+        if (COLOR_KEYWORDS.includes(words[i]) && words[i + 1].length > 2) {
           foundPairs.push({ object: words[i+1], color: words[i] });
           foundColors.push(words[i]);
           foundTargets.push(words[i+1]);
@@ -132,8 +87,8 @@ export function QuerySimulator() {
   };
 
   return (
-    <section id="demo" className="relative max-w-4xl mx-auto px-6 py-12 z-10">
-      <div className="glass-panel border-white/10 bg-slate-900/50 p-8 shadow-2xl rounded-3xl relative overflow-hidden">
+    <section id="demo" className="relative max-w-4xl mx-auto px-4 sm:px-6 py-10 sm:py-12 z-10">
+      <div className="glass-panel border-white/10 bg-slate-900/50 p-4 sm:p-8 shadow-2xl rounded-2xl sm:rounded-3xl relative overflow-hidden">
         <div className="absolute top-0 right-0 p-4">
           <span className="text-[10px] text-indigo-400 font-bold uppercase tracking-wider bg-indigo-500/10 px-2.5 py-1 rounded-md border border-indigo-500/20">
             Interactive Live Demo
@@ -169,7 +124,7 @@ export function QuerySimulator() {
           ))}
         </div>
 
-        <form onSubmit={handleCustomQuerySubmit} className="mt-6 flex gap-3">
+        <form onSubmit={handleCustomQuerySubmit} className="mt-6 flex flex-col sm:flex-row gap-3">
           <input
             type="text"
             value={customQuery}
@@ -269,7 +224,7 @@ export function QuerySimulator() {
 
               <div className="mt-6 p-3 rounded-lg bg-slate-900 border border-white/5 flex items-center justify-between text-xs">
                 <span className="text-slate-500 font-medium">Input Query:</span>
-                <span className="text-slate-300 italic font-mono truncate max-w-[200px]">"{parsedResult.text}"</span>
+                <span className="text-slate-300 italic font-mono truncate max-w-[120px] sm:max-w-[200px]">"{parsedResult.text}"</span>
               </div>
             </div>
           </div>

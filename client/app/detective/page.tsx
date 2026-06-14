@@ -7,11 +7,12 @@ import {
   DetectionSummary,
   ProcessVideoResponse,
 } from "@/types";
-import { Header } from "@/components/layout/header";
+import { useNavStats } from "@/components/layout/nav-stats-context";
+import { SherlockedLogo } from "@/components/ui/sherlocked-logo";
 import { ChatMessage } from "@/components/chat/chat-message";
 import { ChatInput } from "@/components/chat/chat-input";
 
-const MIN_CONFIDENCE = 0.6;
+const MIN_CONFIDENCE = 0.6; // Client-side filter; server uses paper-aligned 0.421 threshold
 const BACKEND_URL =
   process.env.NEXT_PUBLIC_BACKEND_URL ?? "http://localhost:8000";
 const STOPWORDS = new Set([
@@ -69,6 +70,7 @@ const formatTimestamp = (seconds: number) => {
 };
 
 export default function DetectiveApp() {
+  const { setStats } = useNavStats();
   const [results, setResults] = useState<DetectionResult[]>([]);
   const [summary, setSummary] = useState<DetectionSummary | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
@@ -93,6 +95,15 @@ export default function DetectiveApp() {
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
+
+  // Push processing stats into the shared navbar while on this page.
+  useEffect(() => {
+    setStats({
+      processedFrames: summary?.processed_frames,
+      detectionsFound: summary?.detections_found,
+    });
+    return () => setStats({});
+  }, [summary, setStats]);
 
   const appendMessage = useCallback(
     (role: "assistant" | "user", content?: string, frames?: FrameMatch[]) => {
@@ -129,7 +140,7 @@ export default function DetectiveApp() {
 
   const findMatchingFrames = useCallback(
     (targets: string[], colors: string[], pairs: Array<{object: string, color: string}>): FrameMatch[] => {
-      // If pairs are specified, use conjunctive matching (ALL pairs must be present)
+      // Conjunctive mode: every object-attribute pair must appear in the same frame.
       if (pairs && pairs.length > 0) {
         return results.reduce<FrameMatch[]>((acc, frame) => {
           // Check if ALL pairs are satisfied in this frame
@@ -466,7 +477,7 @@ export default function DetectiveApp() {
   );
 
   return (
-    <main className="flex h-screen bg-transparent text-slate-100 overflow-hidden relative selection:bg-indigo-500/30">
+    <main className="flex h-[calc(100dvh-3.75rem)] sm:h-[calc(100dvh-4.5rem)] bg-transparent text-slate-100 overflow-hidden relative selection:bg-indigo-500/30">
       {/* Background Ambience */}
       <div className="fixed inset-0 pointer-events-none z-0">
         <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] bg-indigo-900/20 rounded-full blur-[120px] animate-pulse-glow" />
@@ -474,42 +485,23 @@ export default function DetectiveApp() {
       </div>
 
       <div className="w-full flex flex-col h-full z-10 relative">
-        <Header 
-          processedFrames={summary?.processed_frames}
-          detectionsFound={summary?.detections_found}
-        />
-
         {/* Main chat container */}
-        <div className="flex-1 mx-auto w-full max-w-4xl flex flex-col px-6 overflow-hidden mt-4">
+        <div className="flex-1 mx-auto w-full max-w-4xl flex flex-col px-2 sm:px-6 overflow-hidden pt-2 sm:pt-4 min-h-0">
           <div className="flex-1 flex flex-col min-h-0 relative">
-            {/* Scrollable messages container */}
             <div
-              className="space-y-6 p-6 flex-1 overflow-y-auto min-h-0 hide-scrollbar bg-slate-950/60 backdrop-blur-md rounded-2xl border border-white/5"
+              className="space-y-3 sm:space-y-6 p-2.5 sm:p-6 flex-1 overflow-y-auto min-h-0 hide-scrollbar bg-slate-950/60 backdrop-blur-md rounded-lg sm:rounded-2xl border border-white/5"
               style={{
                 scrollbarWidth: "none",
                 msOverflowStyle: "none",
               }}
             >
               {messages.length === 0 && (
-                <div className="flex flex-col items-center justify-center h-full text-slate-400 gap-4 animate-fade-in">
-                  <div className="h-20 w-20 rounded-2xl bg-slate-800/50 flex items-center justify-center border border-white/5 shadow-xl">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth={1.5}
-                      className="h-10 w-10 text-indigo-400"
-                    >
-                      <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" />
-                      <line x1="21" x2="9" y1="12" y2="12" />
-                      <path d="M21 12l-5-5" />
-                      <path d="M21 12l-5 5" />
-                    </svg>
-                  </div>
+                <div className="flex flex-col items-center justify-center h-full text-slate-400 gap-3 sm:gap-4 animate-fade-in px-4">
+                  <SherlockedLogo size={64} className="sm:hidden" />
+                  <SherlockedLogo size={80} className="hidden sm:block" />
                   <div className="text-center">
-                    <h3 className="text-xl font-semibold text-slate-200 mb-2">Welcome to Sherlocked</h3>
-                    <p className="text-sm">Upload a video to start your investigation.</p>
+                    <h3 className="text-lg sm:text-xl font-semibold text-slate-200 mb-1 sm:mb-2">Welcome to Sherlocked</h3>
+                    <p className="text-xs sm:text-sm max-w-xs sm:max-w-none">Upload a video to start your investigation.</p>
                   </div>
                 </div>
               )}
@@ -530,11 +522,11 @@ export default function DetectiveApp() {
               <div ref={messagesEndRef} />
 
               {isProcessing && (
-                <div className="flex items-center gap-3 animate-slide-up pl-2">
-                  <div className="shrink-0 w-10 h-10 rounded-full flex items-center justify-center bg-slate-800/80 border border-white/5">
-                    <div className="h-5 w-5 border-2 border-indigo-500/30 border-t-indigo-500 rounded-full animate-spin" />
+                <div className="flex items-center gap-2 sm:gap-3 animate-slide-up pl-1 sm:pl-2">
+                  <div className="shrink-0 w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center bg-slate-800/80 border border-white/5">
+                    <div className="h-4 w-4 sm:h-5 sm:w-5 border-2 border-indigo-500/30 border-t-indigo-500 rounded-full animate-spin" />
                   </div>
-                  <div className="text-sm text-slate-400 font-medium">Processing footage...</div>
+                  <div className="text-xs sm:text-sm text-slate-400 font-medium">Processing footage...</div>
                 </div>
               )}
             </div>
@@ -542,7 +534,7 @@ export default function DetectiveApp() {
         </div>
 
         {/* Input Area */}
-        <div className="w-full max-w-4xl mx-auto p-6 pb-8">
+        <div className="w-full max-w-4xl mx-auto px-2 sm:px-6 pt-2 pb-[max(0.75rem,env(safe-area-inset-bottom))] sm:pb-8 shrink-0">
           <ChatInput
             input={input}
             setInput={setInput}
@@ -565,11 +557,11 @@ export default function DetectiveApp() {
       {/* Frame Preview Modal */}
       {selectedFrame && (
         <div 
-          className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-sm px-4 animate-fade-in"
+          className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-slate-950/80 backdrop-blur-sm p-2 sm:p-4 animate-fade-in"
           onClick={() => setSelectedFrame(null)}
         >
-          <div 
-            className="relative max-w-6xl w-full max-h-[90vh] bg-slate-900 rounded-xl overflow-hidden border border-white/10 shadow-2xl flex flex-col"
+          <div
+            className="relative max-w-6xl w-full max-h-[92dvh] sm:max-h-[90dvh] bg-slate-900 rounded-t-2xl sm:rounded-xl overflow-hidden border border-white/10 shadow-2xl flex flex-col"
             onClick={e => e.stopPropagation()}
           >
             <div className="absolute top-4 right-4 z-10">
@@ -605,9 +597,9 @@ export default function DetectiveApp() {
               </div>
             )}
             
-            <div className="bg-slate-900 p-5 border-t border-white/10 flex flex-wrap justify-between items-center gap-4">
+            <div className="bg-slate-900 p-4 sm:p-5 border-t border-white/10 flex flex-col sm:flex-row sm:flex-wrap justify-between items-start sm:items-center gap-3 sm:gap-4">
               <div>
-                <span className="text-lg text-slate-200 font-medium">Timestamp: {selectedFrame.timestampFormatted}</span>
+                <span className="text-base sm:text-lg text-slate-200 font-medium">Timestamp: {selectedFrame.timestampFormatted}</span>
               </div>
               
               <div className="flex flex-wrap gap-2">

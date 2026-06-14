@@ -37,6 +37,16 @@ body {
   overflow-x: hidden;
 }
 
+/* Keep anchored sections visible below the sticky navbar */
+[id="about"],
+[id="features"],
+[id="demo"],
+[id="research"],
+[id="architecture"],
+[id="contact"] {
+  scroll-margin-top: 5rem;
+}
+
 /* Glassmorphism Utilities */
 .glass-panel {
   background: var(--glass-bg);

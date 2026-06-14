@@ -2,8 +2,8 @@
 
 export function CodeShowcase() {
   return (
-    <section className="relative max-w-5xl mx-auto px-6 py-12 z-10">
-      <h2 className="text-3xl font-extrabold text-slate-100 text-center mb-8">
+    <section className="relative max-w-5xl mx-auto px-4 sm:px-6 py-10 sm:py-12 z-10">
+      <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-100 text-center mb-6 sm:mb-8">
         Inside the Detective Pipeline
       </h2>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">

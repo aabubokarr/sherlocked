@@ -1,21 +1,15 @@
 "use client";
 
 import { useState } from "react";
-
-const GARMENT_CLASSES = [
-  "Belt", "Blazer", "Blouse", "Burqo", "Cap", "Cardigan", "Dhoti", "Gown", "Hijab", 
-  "Fatua", "Footwear", "Frock", "Gawn", "Hoodie", "Jacket", "Jeans pant", "Kameez", 
-  "Koti", "Lehenga", "Lungi", "Panjabi", "Pagri", "Pajama", "Pant", "Plazo", "Polo shirt", 
-  "Sando genji", "Saree", "Sherwani", "Shirt", "Shorts", "T-shirt", "Tie", "Top", "Watch"
-];
+import { GARMENT_CLASSES } from "./constants";
 
 export function ShowcaseTabs() {
   const [activeTab, setActiveTab] = useState<"garments" | "architecture" | "pipeline" | "tech-stack" >("garments");
 
   return (
-    <section id="features" className="relative max-w-6xl mx-auto px-6 py-12 z-10">
-      <div className="flex justify-center border-b border-white/10 mb-10">
-        <div className="flex gap-8 overflow-x-auto pb-2 scrollbar-none">
+    <section id="features" className="relative max-w-6xl mx-auto px-4 sm:px-6 py-10 sm:py-12 z-10">
+      <div className="flex justify-center border-b border-white/10 mb-8 sm:mb-10 overflow-x-auto">
+        <div className="flex gap-4 sm:gap-8 pb-2 scrollbar-none min-w-max px-2">
           {(["garments", "architecture", "pipeline", "tech-stack"] as const).map((tab) => (
             <button
               key={tab}

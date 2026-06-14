@@ -1,5 +1,7 @@
 # Sherlocked - AI Video Detective
 
+![Sherlocked](sherlocked.png)
+
 Welcome to the **Sherlocked** project! This README provides an overview of the project, setup instructions, and other relevant details.
 
 ## Table of Contents
@@ -66,32 +68,53 @@ Welcome to the **Sherlocked** project! This README provides an overview of the p
 
 ```
 sherlocked/
-├── client/                     # Frontend application (Next.js)
-│   ├── app/                    # App router
-│   │   ├── globals.css         # Global styles & theme variables
-│   │   ├── layout.tsx          # Root layout
-│   │   └── page.tsx            # Main chat interface
-│   ├── components/             # React components
-│   │   ├── chat/               # Chat-related components
+├── client/                              # Frontend application (Next.js)
+│   ├── app/                             # App router
+│   │   ├── detective/
+│   │   │   └── page.tsx                 # Interactive chatbot interface
+│   │   ├── globals.css                  # Global styles & theme variables
+│   │   ├── icon.svg                     # Brand logo & favicon (single source)
+│   │   ├── layout.tsx                   # Root layout
+│   │   └── page.tsx                     # Portfolio landing page
+│   ├── components/
+│   │   ├── chat/                        # Chat-related components
 │   │   │   ├── chat-input.tsx
 │   │   │   └── chat-message.tsx
-│   │   ├── layout/             # Layout components
-│   │   │   └── header.tsx
-│   │   ├── media/              # Media display components
-│   │   │   └── lightbox.tsx
-│   │   └── ui/                 # Shared UI primitives
-│   │       └── glass-panel.tsx
-│   └── public/                 # Static assets
-├── server/                     # Backend application (FastAPI)
+│   │   ├── layout/                      # App shell & shared navbar
+│   │   │   ├── app-shell.tsx
+│   │   │   ├── nav-sections.ts
+│   │   │   ├── nav-stats-context.tsx
+│   │   │   └── navbar.tsx
+│   │   ├── portfolio/                   # Portfolio landing page sections
+│   │   │   ├── background-ambience.tsx
+│   │   │   ├── code-showcase.tsx
+│   │   │   ├── constants.ts
+│   │   │   ├── contact.tsx
+│   │   │   ├── footer.tsx
+│   │   │   ├── hero.tsx
+│   │   │   ├── metrics.tsx
+│   │   │   ├── query-simulator.tsx
+│   │   │   ├── showcase-tabs.tsx
+│   │   │   └── types.ts
+│   │   └── ui/                          # Shared UI primitives
+│   │       ├── glass-panel.tsx
+│   │       └── sherlocked-logo.tsx      # Thin wrapper around app/icon.svg
+│   ├── hooks/
+│   │   └── use-section-scroll.ts        # Portfolio anchor navigation helper
+│   ├── public/                          # Static assets
+│   └── types/
+│       └── index.ts                     # Shared TypeScript types
+├── server/                              # Backend application (FastAPI)
 │   └── app/
-│       ├── services/           # Business logic
-│       │   └── detector.py     # YOLO object detection service
-│       ├── config.py           # Configuration settings
-│       └── main.py             # API routes & entrypoint
-├── main.py                     # CLI entrypoint for local processing
-├── model.pt                    # YOLO model weights
-├── train.ipynb                 # Model training notebook
-└── README.md                   # Project documentation
+│       ├── services/
+│       │   ├── color_extractor.py       # HSV K-Means color extraction
+│       │   └── detector.py              # YOLO object detection service
+│       ├── config.py                    # Configuration settings
+│       └── main.py                      # API routes & entrypoint
+├── main.py                              # CLI entrypoint for local processing
+├── model.pt                             # YOLO model weights
+├── train.ipynb                          # Model training notebook
+└── README.md                            # Project documentation
 ```
 
 ## Contributors

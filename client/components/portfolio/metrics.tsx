@@ -10,7 +10,7 @@ export function Metrics() {
   });
 
   useEffect(() => {
-    // Micro-animations for counter stats on load
+    // Animate benchmark counters on first paint for a subtle reveal effect.
     const interval = setInterval(() => {
       setStats((prev) => {
         const nextMap = prev.mAp < 81.4 ? Number((prev.mAp + 2.2).toFixed(1)) : 81.4;
@@ -28,7 +28,7 @@ export function Metrics() {
   }, []);
 
   return (
-    <section id="research" className="relative max-w-5xl mx-auto px-6 py-8 z-10">
+    <section id="research" className="relative max-w-5xl mx-auto px-4 sm:px-6 py-8 z-10">
       <div className="text-center mb-8">
         <span className="text-[10px] text-indigo-400 font-bold uppercase tracking-wider bg-indigo-500/10 px-2.5 py-1 rounded-md border border-indigo-500/20">
           Research Paper Benchmarks

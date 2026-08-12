@@ -2,7 +2,7 @@
 
 export function CodeShowcase() {
   return (
-    <section className="relative max-w-5xl mx-auto px-4 sm:px-6 py-10 sm:py-12 z-10">
+    <section id="pipeline" className="relative max-w-5xl mx-auto px-4 sm:px-6 py-10 sm:py-12 z-10">
       <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-100 text-center mb-6 sm:mb-8">
         Inside the Detective Pipeline
       </h2>

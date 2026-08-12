@@ -18,6 +18,7 @@ Welcome to the **Sherlocked** project! This README provides an overview of the p
 ## Visit
 
 - [Repository](https://github.com/aabubokarr/sherlocked)
+- [Website](https://aabubokarr.github.io/sherlocked/)
 
 ## About
 
@@ -68,6 +69,9 @@ Welcome to the **Sherlocked** project! This README provides an overview of the p
 
 ```
 sherlocked/
+├── .github/                             # Github actions
+│   └── workflows/
+│       └── deploy.yml
 ├── client/                              # Frontend application (Next.js)
 │   ├── app/                             # App router
 │   │   ├── detective/

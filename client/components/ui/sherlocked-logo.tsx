@@ -1,16 +1,30 @@
 import type { ImgHTMLAttributes } from "react";
+import Image from "next/image";
 
 const ICON_ASPECT = 412 / 384;
 
-type SherlockedLogoProps = Omit<ImgHTMLAttributes<HTMLImageElement>, "src" | "alt"> & {
+const logoSrc =
+  process.env.NODE_ENV === "production" &&
+  process.env.GITHUB_ACTIONS === "true"
+    ? "/sherlocked/icon.svg"
+    : "/icon.svg";
+
+type SherlockedLogoProps = Omit<
+  ImgHTMLAttributes<HTMLImageElement>,
+  "src" | "alt" | "width" | "height"
+> & {
   size?: number;
+  className?: string;
 };
 
-/** Renders `app/icon.svg` — the single brand mark used as favicon and in-app logo. */
-export function SherlockedLogo({ size = 32, className, ...props }: SherlockedLogoProps) {
+export function SherlockedLogo({
+  size = 32,
+  className,
+  ...props
+}: SherlockedLogoProps) {
   return (
-    <img
-      src="/icon.svg"
+    <Image
+      src={logoSrc}
       alt="Sherlocked"
       width={size}
       height={Math.round(size * ICON_ASPECT)}

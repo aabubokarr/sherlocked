@@ -1,16 +1,10 @@
 // Anchor IDs used by portfolio sections and shared navbar links.
 export const NAV_SECTIONS = [
   {
-    id: "about",
-    label: "About",
-    description: "Project overview & mission",
-    icon: "sparkles",
-  },
-  {
-    id: "features",
-    label: "Features",
-    description: "Garments, pipeline & stack",
-    icon: "grid",
+    id: "research",
+    label: "Research",
+    description: "Benchmarks & metrics",
+    icon: "chart",
   },
   {
     id: "demo",
@@ -19,13 +13,13 @@ export const NAV_SECTIONS = [
     icon: "terminal",
   },
   {
-    id: "research",
-    label: "Research",
-    description: "Benchmarks & metrics",
-    icon: "chart",
+    id: "features",
+    label: "Features",
+    description: "Garments, pipeline & stack",
+    icon: "grid",
   },
   {
-    id: "architecture",
+    id: "pipeline",
     label: "Pipeline",
     description: "CV & AI processing stages",
     icon: "layers",

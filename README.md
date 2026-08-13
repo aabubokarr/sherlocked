@@ -54,6 +54,7 @@ Welcome to the **Sherlocked** project! This README provides an overview of the p
    ```bash
    python -m venv .venv
    source .venv/bin/activate
+   
    pip install -r server/requirements.txt
    ```
 5. Run the frontend:

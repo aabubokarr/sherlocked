@@ -6,7 +6,6 @@ const nextConfig: NextConfig = {
   output: "export",
 
   basePath: isGitHubPages ? "/sherlocked" : "",
-  assetPrefix: isGitHubPages ? "/sherlocked/" : "",
 
   images: {
     unoptimized: true,

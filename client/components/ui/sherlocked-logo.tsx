@@ -3,11 +3,7 @@ import Image from "next/image";
 
 const ICON_ASPECT = 412 / 384;
 
-const logoSrc =
-  process.env.NODE_ENV === "production" &&
-  process.env.GITHUB_ACTIONS === "true"
-    ? "/sherlocked/icon.svg"
-    : "/icon.svg";
+const basePath = process.env.NODE_ENV === "production" ? "/sherlocked" : "";
 
 type SherlockedLogoProps = Omit<
   ImgHTMLAttributes<HTMLImageElement>,
@@ -24,7 +20,7 @@ export function SherlockedLogo({
 }: SherlockedLogoProps) {
   return (
     <Image
-      src={logoSrc}
+      src={`${basePath}/icon.svg`}
       alt="Sherlocked"
       width={size}
       height={Math.round(size * ICON_ASPECT)}
